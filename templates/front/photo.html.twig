@@ -24,6 +24,14 @@
 					<h3>Description</h3>
 					{{photo.description}}
 				</div>
+
+
+				<div>
+					<a href="{{ path('app_add_to_cart', {'slug': photo.slug,'id': photo.id}) }}">
+						<button>
+							Add to Cart</button>
+					</a>
+				</div>
 			</figure>
 		</article>
 	</section>

@@ -33,8 +33,8 @@ class AppFixtures extends Fixture
             $photo->setMetaInfo([]);
             $photo->setCreatedAt(new \DateTimeImmutable("now"));
 
-            // Ajout de 1 à 3 tags aléatoires à chaque photo
-            for ($j = 0; $j < mt_rand(1, 3); $j++) {
+
+            for ($j = 0; $j < mt_rand(2, 8); $j++) {
                 $photo->addTag($tags[array_rand($tags)]);
             }
 

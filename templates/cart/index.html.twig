@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Panier
+{% endblock %}
+
+{% block body %}
+	<style>
+		.example-wrapper {
+			margin: 1em auto;
+			max-width: 800px;
+			width: 95%;
+			font: 18px / 1.5 sans-serif;
+		}
+		.example-wrapper code {
+			background: #F5F5F5;
+			padding: 2px 6px;
+		}
+	</style>
+
+	{% for article in articles %}
+
+
+		<div class="col-6 col-md-2 mb-4">
+			<div class="card" style="width: 100%;">
+				<a href="{{ path('app_display_photo', {'slug': article.photo.slug}) }}"><img src="{{ article.photo.url }}" class="card-img-top" alt="..."></a>
+				<div class="card-body">
+					<h5 class="card-title text-center">{{ article.photo.title }}</h5>
+					<p class="card-text">{{ article.photo.description }}</p>
+					<p class="card-text">{{ article.photo.createdAt|date('d/m/Y') }}</p>
+					<p class="card-text">{{ article.amount }}</p>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+	{# <div class="container">
+																		<div class="row">
+																			{% for photo in photos %}
+																				{% set photoObject = photo[0] %}
+																				{% set quantity = photo[1] %}
+																				<div class="col-6 col-md-2 mb-4">
+																					<div class="card" style="width: 100%;">
+																						<a href="{{ path('app_display_photo', {'slug': photoObject.slug}) }}">
+																							<img src="{{ photoObject.url }}" class="card-img-top" alt="...">
+																						</a>
+																						<div class="card-body">
+																							<h5 class="card-title text-center">{{ photoObject.title }}</h5>
+																							<p class="card-text">{{ photoObject.description }}</p>
+																							<p class="card-text">{{ photoObject.createdAt|date('d/m/Y') }}</p>
+																							<p class="card-text">{{ quantity }}</p>
+																
+																						</div>
+																					</div>
+																				</div>
+																			{% endfor %}
+																		</div>
+																	</div> #}
+
+{% endblock %}
