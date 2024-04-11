@@ -7,11 +7,20 @@ use App\Repository\PhotoRepository;
 use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Twig\Environment;
 
 class FrontController extends AbstractController
 {
-    #[Route('/', name: 'app_front')]
+    #[Route('/', name: 'homepage')]
+    public function noLocalHomePage(PhotoRepository $photoRepository): Response
+    {
+
+        return $this->redirectToRoute('app_front', ['_locale' => 'fr']);
+    }
+
+    #[Route('/{_locale<%app.supported_locales%>}', name: 'app_front')]
     public function index(PhotoRepository $photoRepository): Response
     {
         $photos = $photoRepository->findAll();
@@ -19,11 +28,18 @@ class FrontController extends AbstractController
             'photos' => $photos,
         ]);
     }
-    #[Route('/presentation', name: 'app_presentation')]
-    public function presentation(): Response
+    #[Route('/{_locale<%app.supported_locales%>}/pages/{pageName}', name: 'app_static_page')]
+    public function staticPage(string $_locale, string $pageName, Environment $twig): Response
     {
-        return $this->render('front/presentation.html.twig', []);
+        $template = 'front/pages/' . $pageName . '.' . $_locale . '.html.twig';
+        $loader = $twig->getLoader();
+        if (!$loader->exists($template)) {
+            throw new NotFoundHttpException();
+        }
+        return $this->render($template, []);
     }
+
+
 
     #[Route('/photo/{slug}', name: 'app_display_photo')]
     public function displayPhoto(string $slug, PhotoRepository $photoRepository): Response

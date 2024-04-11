@@ -1,0 +1,9 @@
+Registration.Register: 'Création de compte'
+Registration.Name: Nom
+Registration.Age: Age
+Registration.City: Ville
+Registration.Email: 'Adresse email'
+Registration.Password: 'Mot de Passe'
+Registration.RepeatPassword: 'Validation mot de passe'
+Registration.AgreeTerms: 'Politique confidentialité'
+Registration.Submit: 'Créer le compte'
