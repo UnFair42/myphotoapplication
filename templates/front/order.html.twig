@@ -1,59 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home !
+{% block title %}Commandes
 {% endblock %}
 
 {% block body %}
 	<div class="container">
 		<div class="row">
-			<div class="col-6 col-md-100 mb-4">
-				{% set total = 0 %}
+			<div class="col">
 				{% for row in payload %}
-					{% set total = 0 %}
-
-
-					<div class="card" style="width: 100%;">
+					<div class="card mb-4">
+						<div class="card-header">
+							<h5 class="card-title text-center">Commande n°{{ row.order.id }}</h5>
+						</div>
 						<div class="card-body">
-							<h5 class="card-title text-center">
-								<strong>Commande n°{{ row.order.id }}</strong>
-							</h5>
 							<p class="card-text">
-								<strong>Nombre de photo :
-								</strong>
-								{{ row.items | length }}</p>
+								<strong>Nombre de photos :</strong>
+								{{ row.orderItemsData|length }}</p>
 							<p class="card-text">
-								<strong>Commande finalisée le :
-								</strong>
+								<strong>Commande finalisée le :</strong>
 								{{ row.order.createdAt|date('Y-m-d') }}</p>
-							{% for item in row.items %}
-								{% set subtot = 0 %}
-
-								<p class="card-text">
-									<strong>Prix unitaire
-									</strong>
-									{{ item.price }}
-									€</p>
-								{% set subtot = subtot + item.price * item.quantity%}
-
-								<p class="card-text">
-									<strong>Nombre :</strong>
-									{{ item.quantity }}</p>
-								<p class="card-text">
-									<strong>Sous total :
-									</strong>
-									{{ subtot }}€</p>
+							{% set total = 0 %}
+							{% for item in row.orderItemsData %}
+								{% set subtot = item.orderItem.price * item.orderItem.quantity %}
+								<div class="row mb-3">
+									<div class="col-md-4">
+										<img src="{{ item.photo.url }}" alt="Photo" class="img-fluid">
+									</div>
+									<div class="col-md-8">
+										<p>
+											<strong>Prix unitaire :</strong>
+											{{ item.orderItem.price }}€</p>
+										<p>
+											<strong>Quantité :</strong>
+											{{ item.orderItem.quantity }}</p>
+										<p>
+											<strong>Sous-total :</strong>
+											{{ subtot }}€</p>
+									</div>
+								</div>
 								{% set total = total + subtot %}
 							{% endfor %}
+							<hr>
 							<p class="card-text">
-								<strong>Total</strong>
-								{{ total }}</p>
-
-
+								<strong>Total :</strong>
+								{{ total }}€</p>
 						</div>
 					</div>
 				{% endfor %}
 			</div>
 		</div>
 	</div>
-
 {% endblock %}

@@ -82,14 +82,29 @@ class FrontController extends AbstractController
         if ($user) {
             $userEmail = $user->getUserIdentifier();
             $userDB = $userRepository->findByEmail($userEmail)[0];
-            $customerDB = $userDB->getCustomer();
-            $orders = $customerDB->getOrders();
-
+            if (!$userDB) {
+                throw $this->createNotFoundException('Utilisateur non trouvé en base de données.');
+            }
+            $customer = $userDB->getCustomer();
+            if (!$customer) {
+                throw $this->createNotFoundException('Client non trouvé.');
+            }
+            $orders = $customer->getOrders();
 
             $payload = [];
             foreach ($orders as $order) {
                 $orderItems = $order->getOrderItems();
-                $payload[] = ["order" => $order, 'items' => $orderItems];
+                $orderItemsData = [];
+                foreach ($orderItems as $orderItem) {
+
+                    $photo = $orderItem->getPhotoId();
+                    $orderItemsData[] = [
+                        'orderItem' => $orderItem,
+                        'photo' => $photo,
+                    ];
+                }
+
+                $payload[] = ["order" => $order, 'orderItemsData' => $orderItemsData];
             }
 
 
@@ -97,7 +112,7 @@ class FrontController extends AbstractController
                 'payload' => $payload,
             ]);
         } else {
-            // 
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
     }
 }
