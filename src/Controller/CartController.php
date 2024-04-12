@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Turbo\TurboBundle;
 
 class CartController extends AbstractController
@@ -112,9 +113,16 @@ class CartController extends AbstractController
     }
 
     #[Route('/cartcheckout', name: 'app_checkout')]
+    //#[IsGranted("ROLE_USER")]
     public function checkout(Request $request, EntityManagerInterface $entityManager, PhotoRepository $photoRepository): Response
     {
-
+        if (!$this->getUser()) {
+            $this->addFlash(
+                'error',
+                'Vous devez être connecté pour valider votre panier.'
+            );
+            return $this->redirectToRoute('app_login');
+        }
         $session = $request->getSession();
         $cart = $session->get("cart", []);
         $order = new Order();
@@ -132,6 +140,7 @@ class CartController extends AbstractController
         }
         $entityManager->flush();
 
+        $session->set("cart",  []);
 
         return $this->redirectToRoute('app_cart');
     }
