@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Repository\PhotoRepository;
+use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,10 +23,15 @@ class CartController extends AbstractController
     {
 
         $session = $request->getSession();
+
         $cart = $session->get("cart", []);
         $articles = [];
+        dump($cart);
         foreach ($cart as $id => $amount) {
-            $articles[] = ["photo" => $photoRepository->findById($id)[0], 'amount' => $amount];
+            $photo = $photoRepository->findById($id);
+            if ($photo) {
+                $articles[] = ["photo" => $photo[0], 'amount' => $amount];
+            }
         }
 
         return $this->render('cart/index.html.twig', [
@@ -114,19 +121,24 @@ class CartController extends AbstractController
 
     #[Route('/cartcheckout', name: 'app_checkout')]
     //#[IsGranted("ROLE_USER")]
-    public function checkout(Request $request, EntityManagerInterface $entityManager, PhotoRepository $photoRepository): Response
+    public function checkout(UserRepository $userRepository, Security $security, Request $request, EntityManagerInterface $entityManager, PhotoRepository $photoRepository): Response
     {
-        if (!$this->getUser()) {
+        $user = $security->getUser();
+        if (!$user) {
             $this->addFlash(
                 'error',
                 'Vous devez être connecté pour valider votre panier.'
             );
             return $this->redirectToRoute('app_login');
         }
+        $userEmail = $user->getUserIdentifier();
+        $userDB = $userRepository->findByEmail($userEmail)[0];
+        $customer = $userDB->getCustomer();
         $session = $request->getSession();
         $cart = $session->get("cart", []);
         $order = new Order();
-        $order->setCreatedAt(new DateTimeImmutable("now"));
+        $order->setCustomer($customer)
+            ->setCreatedAt(new DateTimeImmutable("now"));
         $entityManager->persist($order);
 
         foreach ($cart as $id => $amount) {
@@ -142,6 +154,6 @@ class CartController extends AbstractController
 
         $session->set("cart",  []);
 
-        return $this->redirectToRoute('app_cart');
+        return $this->redirectToRoute('app_display_order');
     }
 }

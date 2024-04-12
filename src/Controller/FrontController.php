@@ -3,12 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Photo;
+use App\Repository\CustomerRepository;
+use App\Repository\OrderRepository;
 use App\Repository\PhotoRepository;
 use App\Repository\TagRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Environment;
 
 class FrontController extends AbstractController
@@ -67,5 +72,32 @@ class FrontController extends AbstractController
             'tag' => $tag,
             'photos' => $photos,
         ]);
+    }
+
+    #[Route('/order', name: 'app_display_order')]
+    #[IsGranted("ROLE_USER")]
+    public function displayOrder(UserRepository $userRepository, Security $security): Response
+    {
+        $user = $security->getUser();
+        if ($user) {
+            $userEmail = $user->getUserIdentifier();
+            $userDB = $userRepository->findByEmail($userEmail)[0];
+            $customerDB = $userDB->getCustomer();
+            $orders = $customerDB->getOrders();
+
+
+            $payload = [];
+            foreach ($orders as $order) {
+                $orderItems = $order->getOrderItems();
+                $payload[] = ["order" => $order, 'items' => $orderItems];
+            }
+
+
+            return $this->render('front/order.html.twig', [
+                'payload' => $payload,
+            ]);
+        } else {
+            // 
+        }
     }
 }

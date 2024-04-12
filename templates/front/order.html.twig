@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home !
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<div class="col-6 col-md-100 mb-4">
+				{% set total = 0 %}
+				{% for row in payload %}
+					{% set total = 0 %}
+
+
+					<div class="card" style="width: 100%;">
+						<div class="card-body">
+							<h5 class="card-title text-center">
+								<strong>Commande n°{{ row.order.id }}</strong>
+							</h5>
+							<p class="card-text">
+								<strong>Nombre de photo :
+								</strong>
+								{{ row.items | length }}</p>
+							<p class="card-text">
+								<strong>Commande finalisée le :
+								</strong>
+								{{ row.order.createdAt|date('Y-m-d') }}</p>
+							{% for item in row.items %}
+								{% set subtot = 0 %}
+
+								<p class="card-text">
+									<strong>Prix unitaire
+									</strong>
+									{{ item.price }}
+									€</p>
+								{% set subtot = subtot + item.price * item.quantity%}
+
+								<p class="card-text">
+									<strong>Nombre :</strong>
+									{{ item.quantity }}</p>
+								<p class="card-text">
+									<strong>Sous total :
+									</strong>
+									{{ subtot }}€</p>
+								{% set total = total + subtot %}
+							{% endfor %}
+							<p class="card-text">
+								<strong>Total</strong>
+								{{ total }}</p>
+
+
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
