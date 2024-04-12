@@ -35,11 +35,11 @@ class Photo
     #[ORM\Column(nullable: true)]
     private ?array $meta_info = null;
 
-    #[ORM\Column(options: ["default" => '2024-04-09'])]
-    private ?\DateTimeImmutable $createdAt = null;
+    // #[ORM\Column(options: ["default" => '2024-04-09'])]
+    // private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $modifiedAt = null;
+    // #[ORM\Column(nullable: true)]
+    // private ?\DateTimeImmutable $modifiedAt = null;
 
     /**
      * @var Collection<int, Tag>
@@ -134,29 +134,29 @@ class Photo
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
+    // public function getCreatedAt(): ?\DateTimeImmutable
+    // {
+    //     return $this->createdAt;
+    // }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
+    // public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    // {
+    //     $this->createdAt = $createdAt;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function getModifiedAt(): ?\DateTimeImmutable
-    {
-        return $this->modifiedAt;
-    }
+    // public function getModifiedAt(): ?\DateTimeImmutable
+    // {
+    //     return $this->modifiedAt;
+    // }
 
-    public function setModifiedAt(?\DateTimeImmutable $modifiedAt): static
-    {
-        $this->modifiedAt = $modifiedAt;
+    // public function setModifiedAt(?\DateTimeImmutable $modifiedAt): static
+    // {
+    //     $this->modifiedAt = $modifiedAt;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Tag>
