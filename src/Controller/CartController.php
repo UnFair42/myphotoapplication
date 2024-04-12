@@ -2,7 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
+use App\Entity\OrderItem;
 use App\Repository\PhotoRepository;
+use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,6 +96,42 @@ class CartController extends AbstractController
 
 
         $session->set("cart",  $cart);
+
+        return $this->redirectToRoute('app_cart');
+    }
+
+    #[Route('/cartremove', name: 'app_remove_cart_from_cart')]
+    public function deleteCartFromCart(Request $request): Response
+    {
+
+        $session = $request->getSession();
+
+        $session->set("cart",  []);
+
+        return $this->redirectToRoute('app_cart');
+    }
+
+    #[Route('/cartcheckout', name: 'app_checkout')]
+    public function checkout(Request $request, EntityManagerInterface $entityManager, PhotoRepository $photoRepository): Response
+    {
+
+        $session = $request->getSession();
+        $cart = $session->get("cart", []);
+        $order = new Order();
+        $order->setCreatedAt(new DateTimeImmutable("now"));
+        $entityManager->persist($order);
+
+        foreach ($cart as $id => $amount) {
+
+            $orderItem = new OrderItem();
+            $orderItem->setPhotoId($photoRepository->findById($id)[0])
+                ->setOrderId($order)
+                ->setPrice($photoRepository->findById($id)[0]->getPrice())
+                ->setQuantity($amount);
+            $entityManager->persist($orderItem);
+        }
+        $entityManager->flush();
+
 
         return $this->redirectToRoute('app_cart');
     }

@@ -106,61 +106,82 @@
 				<!-- end row-->
 			</div>
 
-			<div id="checkout" class="col-xl-4">
-				<div class="mt-5 mt-lg-0">
-					<div class="card border shadow-none">
-						<div class="card-header bg-transparent border-bottom py-3 px-4">
-							<h5 class="font-size-16 mb-0">Order Summary
-							</h5>
-						</div>
-						<div class="card-body p-4 pt-2">
+			{% if total > 0 %}
 
-							<div class="table-responsive">
-								<table class="table mb-0">
-									<tbody>
-										<tr>
-											<td>Sub Total :</td>
-											<td class="text-end">{{total}}</td>
-										</tr>
-										<tr>
-											<td>Livraison :</td>
-											<td class="text-end">{% set total = total + 0.05 %}{{total * 0.05}}</td>
-										</tr>
-										<tr>
-											<td>TVA :</td>
-											<td class="text-end">{% set total = total * 1.2 %}{{total * 0.2}}</td>
-										</tr>
+				<div class="col-xl-4">
+					<div class="mt-5 mt-lg-0">
+						<div class="card border shadow-none">
+							<div class="card-header bg-transparent border-bottom py-3 px-4">
+								<h5 class="font-size-16 mb-0">Order Summary
+								</h5>
+							</div>
+							<div class="card-body p-4 pt-2">
 
-										<tr class="bg-light">
-											<th>Total :</th>
-											<td class="text-end">
-												<span class="fw-bold">
-													{{total}}
-												</span>
-											</td>
-										</tr>
-										<tr class="bg-light">
-											<td class="text-end">
-												<div class="col-sm-6">
-													<div class="text-sm-end mt-2 mt-sm-0">
-														<a href="ecommerce-checkout.html" class="btn btn-success ">
-															<i class="mdi mdi-cart-outline me-1 "></i>
-															Checkout
-														</a>
+								<div class="table-responsive">
+									<table class="table mb-0">
+										<tbody>
+											<tr>
+												<td>Sub Total :</td>
+												<td class="text-end">{{total}}</td>
+											</tr>
+											<tr>
+												<td>Livraison :</td>
+												<td class="text-end">{% set total = total + 0.05 %}{{total * 0.05}}</td>
+											</tr>
+											<tr>
+												<td>TVA :</td>
+												<td class="text-end">{% set total = total * 1.2 %}{{total * 0.2}}</td>
+											</tr>
+
+											<tr class="bg-light">
+												<th>Total :</th>
+												<td class="text-end">
+													<span class="fw-bold">
+														{{total}}
+													</span>
+												</td>
+											</tr>
+											<tr class="bg-light">
+												<td class="text-end">
+													<div class="col-sm-6">
+														<div class="text-sm-end mt-2 mt-sm-0">
+															<a href="{{ path('app_checkout') }}" class="btn btn-success ">
+																<i class="mdi mdi-cart-outline me-1 "></i>
+																Checkout
+															</a>
+														</div>
+
 													</div>
-												</div>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+												</td>
+
+												<td class="text-end">
+													<div class="col-sm-6">
+														<div class="text-sm-end mt-2 mt-sm-0">
+															<a href="{{ path('app_remove_cart_from_cart') }}" class="btn btn-danger ">
+																<i class="mdi mdi-cart-outline me-1 "></i>
+																Delete Cart
+															</a>
+														</div>
+
+													</div>
+												</td>
+
+
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-		<!-- end row -->
 
+			</div>
+			<!-- end row -->
+
+		{% else %}
+			<h2>Votre panier est vide.</h2>
+		{% endif %}
 	</div>
 
 
