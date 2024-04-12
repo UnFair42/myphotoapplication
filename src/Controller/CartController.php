@@ -27,8 +27,8 @@ class CartController extends AbstractController
         ]);
     }
 
-    #[Route('/cart/{id}/{slug}', name: 'app_add_to_cart')]
-    public function addToCart(string $slug, string $id, Request $request): Response
+    #[Route('/cart/{id}', name: 'app_add_to_cart_from_photo')]
+    public function addToCartFromPhoto(string $id, Request $request): Response
     {
 
         $session = $request->getSession();
@@ -42,6 +42,57 @@ class CartController extends AbstractController
         $session->set("cart",  $cart);
         $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
         return $this->render('front/_cart.html.twig', ["cartNumber" => count($cart)]);
-        //return $this->redirectToRoute('app_display_photo', ['slug' => $slug]);
+    }
+
+    #[Route('/cartcheckoutadd/{id}', name: 'app_add_to_cart_from_cart')]
+    public function addToCartFromCart(string $id, Request $request): Response
+    {
+
+        $session = $request->getSession();
+        $cart = $session->get("cart", []);
+        if (isset($cart[$id])) {
+            $cart[$id]++;
+        } else {
+            $cart[$id] = 1;
+        }
+
+        $session->set("cart",  $cart);
+
+        return $this->redirectToRoute('app_cart');
+    }
+
+    #[Route('/cartcheckoutremove/{id}', name: 'app_remove_from_cart_from_cart')]
+    public function removeFromCartFromCart(string $id, Request $request): Response
+    {
+
+        $session = $request->getSession();
+        $cart = $session->get("cart", []);
+
+        if (isset($cart[$id])) {
+            if ($cart[$id] > 1) {
+                $cart[$id] = $cart[$id] - 1;
+            } else {
+                unset($cart[$id]);
+            }
+        }
+
+        $session->set("cart",  $cart);
+
+        return $this->redirectToRoute('app_cart');
+    }
+
+    #[Route('/cartcheckoutdelete/{id}', name: 'app_delete_from_cart_from_cart')]
+    public function deleteFromCartFromCart(string $id, Request $request): Response
+    {
+
+        $session = $request->getSession();
+        $cart = $session->get("cart", []);
+
+        unset($cart[$id]);
+
+
+        $session->set("cart",  $cart);
+
+        return $this->redirectToRoute('app_cart');
     }
 }
