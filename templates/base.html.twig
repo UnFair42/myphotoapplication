@@ -7,7 +7,7 @@
 			{% endblock %}
 		</title>
 		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>"> {% block stylesheets %}{% endblock %}
-
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 		{% block javascripts %}
 			{% block importmap %}
 				{{ importmap('app') }}
@@ -16,12 +16,6 @@
 	</head>
 	<body>
 
-		{# <nav>
-																					<a href="{{path('app_front')}}">Home</a>
-																					<a href="{{path('app_presentation')}}">Presentation</a>
-																					<a href="{{path('app_register')}}">Inscription</a>
-																					<a href="{{path('app_login')}}">Connexion</a>
-																				</nav> #}
 
 		<nav class="navbar navbar-expand-lg bg-light">
 			<div class="container-fluid">
@@ -29,7 +23,9 @@
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="{{path('app_front')}}">Home</a>
+							<a class="nav-link active" aria-current="page" href="{{path('app_front')}}">
+								<i class="fa-solid fa-house"></i>
+							</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="{{path('app_static_page',{pageName:'presentation'})}}">Presentation</a>
@@ -54,17 +50,28 @@
 								<li><hr class="dropdown-divider"></li>
 							</ul>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href={{path('app_cart')}}>Panier</a>
+
+						<li class="nav_item" id="cart">
+							<a class="nav-link" href="{{path('app_cart')}}">
+								<button type="button" class="btn btn-primary position-relative">
+									<i class="fas fa-shopping-cart"></i>
+									<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+										{% if cartNumber is defined %}
+											{{cartNumber}}
+										{% else %}
+											{{app.session.get('cart',[]) | length}}
+										{% endif %}
+									</span>
+								</button>
+							</a>
 						</li>
 					</ul>
-					<form class="d-flex" role="search">
+					<form class=" d-flex" role=" search">
 						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
 						<button class="btn btn-outline-success" type="submit">Search</button>
 					</form>
 				</div>
 			</div>
-		</nav>
-		{% block body %}{% endblock %}
+		</li>
 	</body>
-</html>
+</html></nav>{% block body %}{% endblock %}</body></html>

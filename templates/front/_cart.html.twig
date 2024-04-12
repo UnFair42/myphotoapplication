@@ -1,0 +1,16 @@
+<turbo-stream action="update" target="cart">
+	<template>
+		<a class="nav-link" href="{{path('app_cart')}}">
+			<button type="button" class="btn btn-primary position-relative">
+				<i class="icon-shopping-cart"></i>
+				<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+					{% if cartNumber is defined %}
+						{{cartNumber}}
+					{% else %}
+						{{app.session.get('cart',[]) | length}}
+					{% endif %}
+				</span>
+			</button>
+		</a>
+	</template>
+</turbo-stream>

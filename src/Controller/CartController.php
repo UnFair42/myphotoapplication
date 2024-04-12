@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\UX\Turbo\TurboBundle;
 
 class CartController extends AbstractController
 {
@@ -39,7 +40,8 @@ class CartController extends AbstractController
         }
 
         $session->set("cart",  $cart);
-
-        return $this->redirectToRoute('app_display_photo', ['slug' => $slug]);
+        $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+        return $this->render('front/_cart.html.twig', ["cartNumber" => count($cart)]);
+        //return $this->redirectToRoute('app_display_photo', ['slug' => $slug]);
     }
 }
